@@ -17,6 +17,12 @@ interface DocFile {
   fullPath: string;
 }
 
+interface SearchMatch {
+  path: string;
+  matchCount: number;
+  snippet?: string;
+}
+
 class RootAppDocsServer {
   private server: Server;
   private docsPath: string;
@@ -126,6 +132,32 @@ class RootAppDocsServer {
             required: ['query'],
           },
         },
+        {
+          name: 'search_content',
+          description: 'Search within the content of all documentation files',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              query: {
+                type: 'string',
+                description: 'Search query - keyword or phrase to search within file contents',
+              },
+              limit: {
+                type: 'number',
+                description: 'Maximum number of results to return (default: 20)',
+              },
+              includeSnippet: {
+                type: 'boolean',
+                description: 'Include context snippets around matches (default: false)',
+              },
+              contextLength: {
+                type: 'number',
+                description: 'Number of characters before and after match in snippet (default: 100)',
+              },
+            },
+            required: ['query'],
+          },
+        },
       ],
     }));
 
@@ -140,6 +172,8 @@ class RootAppDocsServer {
             return this.handleListDirectory(args);
           case 'search_documentation':
             return this.handleSearchDocumentation(args);
+          case 'search_content':
+            return this.handleSearchContent(args);
           default:
             throw new McpError(ErrorCode.MethodNotFound, `Unknown tool: ${name}`);
         }
@@ -230,10 +264,93 @@ class RootAppDocsServer {
       content: [
         {
           type: 'text',
-          text: JSON.stringify(matches.map((m) => m.fullPath), null, 2),
+          text: JSON.stringify(matches.map((m) => m.fullPath.replace(/\.md$/, '')), null, 2),
         },
       ],
     };
+  }
+
+  private handleSearchContent(args: any) {
+    const query = args.query as string;
+    if (!query) {
+      throw new McpError(ErrorCode.InvalidParams, 'Query is required');
+    }
+
+    const limit = (args.limit as number) || 20;
+    const includeSnippet = (args.includeSnippet as boolean) || false;
+    const contextLength = (args.contextLength as number) || 100;
+    const lowerQuery = query.toLowerCase();
+
+    const matches: SearchMatch[] = [];
+
+    for (const file of this.indexedFiles) {
+      const fullPath = path.join(this.docsPath, file.fullPath);
+      
+      if (!fs.existsSync(fullPath)) continue;
+
+      const content = fs.readFileSync(fullPath, 'utf-8');
+      const lowerContent = content.toLowerCase();
+
+      const matchCount = this.countOccurrences(lowerContent, lowerQuery);
+
+      if (matchCount > 0) {
+        const match: SearchMatch = {
+          path: file.fullPath.replace(/\.md$/, ''),
+          matchCount,
+        };
+
+        if (includeSnippet) {
+          match.snippet = this.extractSnippet(content, query, contextLength);
+        }
+
+        matches.push(match);
+
+        if (matches.length >= limit) break;
+      }
+    }
+
+    return {
+      content: [
+        {
+          type: 'text',
+          text: JSON.stringify({
+            matches,
+            total: matches.length,
+            query,
+          }, null, 2),
+        },
+      ],
+    };
+  }
+
+  private countOccurrences(content: string, query: string): number {
+    let count = 0;
+    let position = 0;
+    
+    while ((position = content.indexOf(query, position)) !== -1) {
+      count++;
+      position += query.length;
+    }
+    
+    return count;
+  }
+
+  private extractSnippet(content: string, query: string, contextLength: number): string {
+    const lowerContent = content.toLowerCase();
+    const lowerQuery = query.toLowerCase();
+    const index = lowerContent.indexOf(lowerQuery);
+    
+    if (index === -1) return '';
+
+    const start = Math.max(0, index - contextLength);
+    const end = Math.min(content.length, index + query.length + contextLength);
+    
+    let snippet = content.substring(start, end);
+    
+    if (start > 0) snippet = '...' + snippet;
+    if (end < content.length) snippet = snippet + '...';
+    
+    return snippet;
   }
 
   private setupErrorHandling(): void {

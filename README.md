@@ -6,7 +6,8 @@ A simple MCP (Model Context Protocol) server that serves RootApp documentation f
 
 - **Retrieve Documentation**: Access any markdown file in the DOCS directory
 - **List Directory**: Browse the documentation directory structure
-- **Search**: Case-insensitive search across file names and paths
+- **Search Files**: Case-insensitive search across file names and paths
+- **Search Content**: Search within the actual content of documentation files
 - **Dynamic Path Resolution**: Automatically resolves DOCS path relative to the project directory
 
 ## Installation
@@ -76,6 +77,34 @@ Search across all documentation files.
   - Example: `"client"`, `"channel"`, `"class"`
 
 **Returns:** Array of full file paths that match the query (case-insensitive on file names and full paths)
+
+### `search_content`
+
+Search within the actual content of all documentation files.
+
+**Parameters:**
+- `query` (string): Search query - keyword or phrase to search within file contents
+  - Example: `"exception"`, `"createMessage"`, `"permission"`
+- `limit` (number, optional): Maximum number of results to return (default: 20)
+- `includeSnippet` (boolean, optional): Include context snippets around matches (default: false)
+- `contextLength` (number, optional): Number of characters before and after match in snippet (default: 100)
+
+**Returns:** Array of matching files with paths, match counts, and optional snippets
+
+**Example Response:**
+```json
+{
+  "matches": [
+    {
+      "path": "bot/api/reference/classes/RootApiException.md",
+      "matchCount": 15,
+      "snippet": "...RootApiException is thrown when an API call fails..."
+    }
+  ],
+  "total": 8,
+  "query": "exception"
+}
+```
 
 ## Usage Examples
 

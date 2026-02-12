@@ -131,7 +131,7 @@ After saving your configuration:
 
 ## Available Tools
 
-The RootApp Documentation MCP Server provides three tools for accessing the documentation:
+The RootApp Documentation MCP Server provides four tools for accessing the documentation:
 
 ### 1. `get_documentation`
 
@@ -205,6 +205,50 @@ Searches across all documentation files for matching file names and paths.
 - Finding all files related to a specific topic
 - Discovering documentation for a concept
 - Quickly locating relevant files
+
+---
+
+### 4. `search_content`
+
+Searches within the actual content of all documentation files.
+
+**Parameters:**
+
+| Parameter        | Type    | Required | Description |
+|-----------------|---------|----------|-------------|
+| `query`         | string  | Yes      | Search query - keyword or phrase to search within file contents |
+| `limit`         | number  | No       | Maximum number of results to return (default: 20) |
+| `includeSnippet` | boolean | No       | Include context snippets around matches (default: false) |
+| `contextLength` | number  | No       | Number of characters before and after match in snippet (default: 100) |
+
+**Behavior:**
+- Searches within actual file content (not just filenames)
+- Case-insensitive matching
+- Returns files containing the query with match count
+- Optionally includes context snippets showing where matches occur
+
+**Returns:**
+- List of matching files with paths, match counts, and optional snippets
+
+**Use Cases:**
+- Finding documentation about specific concepts or topics
+- Locating where a particular functionality is explained
+- Discovering which files discuss certain features
+
+**Example Response:**
+```json
+{
+  "matches": [
+    {
+      "path": "bot/api/reference/classes/RootApiException.md",
+      "matchCount": 15,
+      "snippet": "...RootApiException is thrown when an API call fails..."
+    }
+  ],
+  "total": 8,
+  "query": "exception"
+}
+```
 
 ---
 
@@ -310,6 +354,59 @@ Enumeration files:
 - ChannelEvent.md
 - ChannelType.md
 - ...
+```
+
+---
+
+### Example 6: Content Search
+
+**User:** "Find all documentation about exception handling"
+
+**AI Assistant Response:**
+```
+Let me search for content about exceptions.
+
+[Uses search_content with query "exception"]
+
+Found 8 files containing "exception":
+- bot/api/reference/classes/RootApiException.md (matchCount: 15)
+- bot/docs/develop/bot/project/overview.md (matchCount: 3)
+- bot/docs/tutorials/announce/bot/overview.md (matchCount: 2)
+- bot/docs/develop/server/overview.md (matchCount: 2)
+- bot/docs/develop/persistence/overview.md (matchCount: 2)
+- bot/docs/design/permissions.md (matchCount: 1)
+- bot/docs/get/started.md (matchCount: 1)
+- bot/docs/develop/community/overview.md (matchCount: 1)
+
+Now let me get the main exception documentation:
+
+[Uses get_documentation with path "bot/api/reference/classes/RootApiException"]
+
+<h1>RootApiException</h1>
+... [full content]
+```
+
+---
+
+### Example 7: Content Search with Snippets
+
+**User:** "What documentation mentions 'createMessage'?"
+
+**AI Assistant Response:**
+```
+Let me search for "createMessage" in the documentation content.
+
+[Uses search_content with query "createMessage", includeSnippet: true, contextLength: 50]
+
+Found 12 files containing "createMessage":
+1. bot/api/reference/type-aliases/ChannelMessageCreateRequest.md (matchCount: 8)
+   Snippet: "...ChannelMessageCreateRequest is used to create a new message..."
+   
+2. bot/api/reference/type-aliases/ChannelMessageClient.md (matchCount: 6)
+   Snippet: "...createMessage method creates a new message in the channel..."
+
+3. bot/api/reference/type-aliases/ChannelMessageCreatedEvent.md (matchCount: 4)
+   Snippet: "...ChannelMessageCreatedEvent is emitted when a message is created..."
 ```
 
 ---
