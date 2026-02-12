@@ -289,7 +289,9 @@ class RootAppDocsServer {
       if (!fs.existsSync(fullPath)) continue;
 
       const content = fs.readFileSync(fullPath, 'utf-8');
-      const lowerContent = content.toLowerCase();
+      // Strip HTML tags for cleaner search results
+      const cleanContent = this.stripHtmlTags(content);
+      const lowerContent = cleanContent.toLowerCase();
 
       const matchCount = this.countOccurrences(lowerContent, lowerQuery);
 
@@ -300,7 +302,7 @@ class RootAppDocsServer {
         };
 
         if (includeSnippet) {
-          match.snippet = this.extractSnippet(content, query, contextLength);
+          match.snippet = this.extractSnippet(cleanContent, query, contextLength);
         }
 
         matches.push(match);
@@ -321,6 +323,11 @@ class RootAppDocsServer {
         },
       ],
     };
+  }
+
+  private stripHtmlTags(content: string): string {
+    // Remove content between < and > (HTML tags)
+    return content.replace(/<[^>]*>/g, '');
   }
 
   private countOccurrences(content: string, query: string): number {

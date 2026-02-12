@@ -105,7 +105,7 @@ Search across all documentation files.
 
 ### `search_content`
 
-Search within the actual content of all documentation files.
+Search within the actual content of all documentation files. HTML tags are automatically stripped from content before searching to avoid false matches from HTML attributes like `class`, `id`, etc.
 
 **Parameters:**
 - `query` (string): Search query - keyword or phrase to search within file contents
@@ -115,6 +115,8 @@ Search within the actual content of all documentation files.
 - `contextLength` (number, optional): Number of characters before and after match in snippet (default: 100)
 
 **Returns:** Array of matching files with paths, match counts, and optional snippets
+
+**Note:** HTML tags are automatically removed before searching, ensuring searches for terms like `class` or `id` only match actual content, not HTML attributes.
 
 **Example Response:**
 ```json

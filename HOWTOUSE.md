@@ -210,7 +210,7 @@ Searches across all documentation files for matching file names and paths.
 
 ### 4. `search_content`
 
-Searches within the actual content of all documentation files.
+Searches within the actual content of all documentation files. HTML tags are automatically stripped before searching to avoid false matches.
 
 **Parameters:**
 
@@ -223,9 +223,16 @@ Searches within the actual content of all documentation files.
 
 **Behavior:**
 - Searches within actual file content (not just filenames)
+- HTML tags are automatically removed before searching to avoid false matches
 - Case-insensitive matching
 - Returns files containing the query with match count
 - Optionally includes context snippets showing where matches occur
+
+**Note on HTML Tag Stripping:**
+If your documentation contains HTML markup (like the Docusaurus docs in this repository), HTML tags are automatically stripped before searching. This means:
+- Searching for `class` won't match `<div class="...">`
+- Searching for `id` won't match `<p id="...">`
+- Only actual text content is searched
 
 **Returns:**
 - List of matching files with paths, match counts, and optional snippets
