@@ -2,6 +2,11 @@
 
 A simple MCP (Model Context Protocol) server that serves RootApp documentation files with search and retrieval capabilities using stdio transport.
 
+## Docs as of Feb 11 2026
+
+This repository contains RootApp documentation files as of February 11, 2026.
+
+
 ## Features
 
 - **Retrieve Documentation**: Access any markdown file in the DOCS directory
@@ -64,10 +69,6 @@ For VS Code's native MCP support, use this format:
 Replace the path with your actual local repository path.
 
 **Note:** After updating the MCP configuration, restart Cline or toggle MCP connections to apply the changes.
-
-## Docs as of Feb 11 2026
-
-This repository contains RootApp documentation files as of February 11, 2026.
 
 ## Available Tools
 
