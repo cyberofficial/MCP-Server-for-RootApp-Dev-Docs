@@ -65,6 +65,10 @@ Replace the path with your actual local repository path.
 
 **Note:** After updating the MCP configuration, restart Cline or toggle MCP connections to apply the changes.
 
+## Docs as of Feb 11 2026
+
+This repository contains RootApp documentation files as of February 11, 2026.
+
 ## Available Tools
 
 ### `get_documentation`
