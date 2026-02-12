@@ -1,0 +1,13 @@
+<h1>Generate Bot starter code | Root developer documentation</h1>
+<header><h1>Generate Bot starter code</h1></header>
+<p>Root supplies a command-line utility named <code>create-root</code> that generates starter code. You'll need <code>npx</code> installed on your machine in order to run the tool (<code>npx</code> is included with <code>Node</code>).</p>
+<p>The generated code will build; however, you'll need to add a <code>DEV_TOKEN</code> to the generated <code>.env</code> file in order to test locally. You get a <code>DEV_TOKEN</code> from the <a href="https://dev.rootapp.com" target="_blank" rel="noopener noreferrer" class="">Root Developer Portal</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="usage">Usage<a href="#usage" class="hash-link" aria-label="Direct link to Usage" title="Direct link to Usage" translate="no">​</a></h2>
+<p>To create a new project using <code>create-root</code>, open a terminal, navigate to your target folder, and run the following command:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#9CDCFE;--prism-background-color:#1E1E1E"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#9CDCFE;background-color:#1E1E1E"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#9CDCFE"><span class="token plain">npx create-root --bot &lt;ProjectName&gt;</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="parameters">Parameters<a href="#parameters" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters" translate="no">​</a></h2>
+<ul>
+<li class=""><code>&lt;ProjectName&gt;</code> → The name of your project. This will also be used as the folder name. Do not include the angle brackets in your name.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="example">Example<a href="#example" class="hash-link" aria-label="Direct link to Example" title="Direct link to Example" translate="no">​</a></h2>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#9CDCFE;--prism-background-color:#1E1E1E"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#9CDCFE;background-color:#1E1E1E"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#9CDCFE"><span class="token plain">npx create-root --bot MyBot</span><br></span></code></pre></div></div>

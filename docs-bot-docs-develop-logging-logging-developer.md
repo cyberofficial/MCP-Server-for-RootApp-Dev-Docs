@@ -1,0 +1,31 @@
+<h1>Developer log | Root developer documentation</h1>
+<header><h1>Developer log</h1></header>
+<p>It can be hard to know what's happening on your server once it's deployed. The <strong>developer log</strong> helps developers debug their code while it's running in the Root cloud.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="what-is-the-developer-log">What is the developer log?<a href="#what-is-the-developer-log" class="hash-link" aria-label="Direct link to What is the developer log?" title="Direct link to What is the developer log?" translate="no">​</a></h2>
+<p>The <strong>developer log</strong> is a persistent, developer-visible log. It appears inside the Root Developer Portal and helps you track your code's execution once it's deployed. Each instance of your server has its own log; that is, if your server is installed in five communities, you'll have five logs.</p>
+<ul>
+<li class="">You view your logs in the <strong>Developer Portal</strong>. Open the <strong>Logs</strong> tab to see the most recent messages.</li>
+<li class="">Messages are visible to you, the developer. They're not shown to community members.</li>
+<li class="">Only the latest few thousand lines of output are available</li>
+<li class="">Older messages are automatically trimmed as new ones arrive.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-community-controls-whether-the-log-is-available">The community controls whether the log is available<a href="#the-community-controls-whether-the-log-is-available" class="hash-link" aria-label="Direct link to The community controls whether the log is available" title="Direct link to The community controls whether the log is available" translate="no">​</a></h2>
+<p>For data-privacy reasons, the community is in control of the developer log. It's disabled by default. Community administrators can enable it in the settings.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="when-to-use-it">When to use it<a href="#when-to-use-it" class="hash-link" aria-label="Direct link to When to use it" title="Direct link to When to use it" translate="no">​</a></h2>
+<p>Use the developer log to track how your server code is working once it's deployed to the Root cloud.</p>
+<ul>
+<li class="">Use logging freely during development to track values, watch for errors, and understand what your server is doing</li>
+<li class="">Avoid writing large or frequent logs in production since you’ll only see the most recent ones</li>
+<li class="">Don’t log sensitive data (e.g. user passwords or secrets). Logs are visible in the Developer Portal and aren’t encrypted.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="how-to-write-to-the-developer-log">How to write to the developer log<a href="#how-to-write-to-the-developer-log" class="hash-link" aria-label="Direct link to How to write to the developer log" title="Direct link to How to write to the developer log" translate="no">​</a></h2>
+<p>There’s no special logging API needed. Everything your server code writes to <code>stdout</code> or <code>stderr</code> is automatically captured. This includes:</p>
+<ul>
+<li class=""><code>console.log()</code>, <code>console.error()</code>, <code>console.warn()</code>, etc.</li>
+<li class="">Any output from a logging library that writes to standard output or error</li>
+</ul>
+<p>Root collects this output and shows it to you live in the Developer Portal.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="example">Example<a href="#example" class="hash-link" aria-label="Direct link to Example" title="Direct link to Example" translate="no">​</a></h2>
+<div class="language-ts codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#9CDCFE;--prism-background-color:#1E1E1E"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-ts codeBlock_bY9V thin-scrollbar" style="color:#9CDCFE;background-color:#1E1E1E"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#9CDCFE"><span class="token builtin" style="color:rgb(86, 156, 214)">console</span><span class="token punctuation" style="color:rgb(212, 212, 212)">.</span><span class="token function" style="color:rgb(220, 220, 170)">log</span><span class="token punctuation" style="color:rgb(212, 212, 212)">(</span><span class="token string" style="color:rgb(206, 145, 120)">"Starting vote tally..."</span><span class="token punctuation" style="color:rgb(212, 212, 212)">)</span><span class="token punctuation" style="color:rgb(212, 212, 212)">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#9CDCFE"><span class="token plain"></span><span class="token builtin" style="color:rgb(86, 156, 214)">console</span><span class="token punctuation" style="color:rgb(212, 212, 212)">.</span><span class="token function" style="color:rgb(220, 220, 170)">warn</span><span class="token punctuation" style="color:rgb(212, 212, 212)">(</span><span class="token string" style="color:rgb(206, 145, 120)">"No votes found for this round"</span><span class="token punctuation" style="color:rgb(212, 212, 212)">)</span><span class="token punctuation" style="color:rgb(212, 212, 212)">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#9CDCFE"><span class="token plain"></span><span class="token builtin" style="color:rgb(86, 156, 214)">console</span><span class="token punctuation" style="color:rgb(212, 212, 212)">.</span><span class="token function" style="color:rgb(220, 220, 170)">error</span><span class="token punctuation" style="color:rgb(212, 212, 212)">(</span><span class="token string" style="color:rgb(206, 145, 120)">"Poll not found in database:"</span><span class="token punctuation" style="color:rgb(212, 212, 212)">,</span><span class="token plain"> err</span><span class="token punctuation" style="color:rgb(212, 212, 212)">)</span><span class="token punctuation" style="color:rgb(212, 212, 212)">;</span><br></span></code></pre></div></div>
+<p>These messages will show up instantly in the <a href="https://dev.rootapp.com" target="_blank" rel="noopener noreferrer" class="">Root Developer Portal</a> when your server runs.</p>
+<p>Developer logging is your window into your server. If something’s not working, start by looking at the logs.</p>

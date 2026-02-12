@@ -1,0 +1,25 @@
+<h1>CommunityMemberBan | Root developer documentation</h1>
+<header><h1>CommunityMemberBan</h1></header><blockquote>
+<p><strong>CommunityMemberBan</strong>: <code>object</code></p>
+</blockquote>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="type-declaration">Type declaration<a href="#type-declaration" class="hash-link" aria-label="Direct link to Type declaration" title="Direct link to Type declaration" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="agentuserid">agentUserId<a href="#agentuserid" class="hash-link" aria-label="Direct link to agentUserId" title="Direct link to agentUserId" translate="no">​</a></h3>
+<blockquote>
+<p><strong>agentUserId</strong>: <a class="" href="/docs/bot-api-reference/type-aliases/UserGuid/"><code>UserGuid</code></a></p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="expiresat">expiresAt?<a href="#expiresat" class="hash-link" aria-label="Direct link to expiresAt?" title="Direct link to expiresAt?" translate="no">​</a></h3>
+<blockquote>
+<p><code>optional</code> <strong>expiresAt</strong>: <code>Date</code></p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="id">id<a href="#id" class="hash-link" aria-label="Direct link to id" title="Direct link to id" translate="no">​</a></h3>
+<blockquote>
+<p><strong>id</strong>: <a class="" href="/docs/bot-api-reference/type-aliases/CommunityMemberBanGuid/"><code>CommunityMemberBanGuid</code></a></p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="reason">reason?<a href="#reason" class="hash-link" aria-label="Direct link to reason?" title="Direct link to reason?" translate="no">​</a></h3>
+<blockquote>
+<p><code>optional</code> <strong>reason</strong>: <code>string</code></p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="userid">userId<a href="#userid" class="hash-link" aria-label="Direct link to userId" title="Direct link to userId" translate="no">​</a></h3>
+<blockquote>
+<p><strong>userId</strong>: <a class="" href="/docs/bot-api-reference/type-aliases/UserGuid/"><code>UserGuid</code></a></p>
+</blockquote>
