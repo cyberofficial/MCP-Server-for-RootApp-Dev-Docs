@@ -1,0 +1,20 @@
+{
+  "name": "rootapp-docs-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server for RootApp documentation",
+  "type": "module",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\"",
+    "watch": "tsc --watch"
+  },
+  "keywords": ["mcp", "documentation"],
+  "author": "",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  }
+}
