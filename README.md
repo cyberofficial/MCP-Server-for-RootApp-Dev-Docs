@@ -46,7 +46,7 @@ The MCP server uses stdio transport. Configure it in your Cline/VS Code MCP sett
 }
 ```
 
-Replace `<PATH_TO_REPO>` with your local repository path (e.g., `/Users/yourname/RootAppDevDocs` on macOS/Linux or `d:/github/RootAppDevDocs` on Windows).
+Replace `<PATH_TO_REPO>` with your local repository path (e.g., `/Users/yourname/MCP-Server-for-RootApp-Dev-Docs` on macOS/Linux or `d:/github/MCP-Server-for-RootApp-Dev-Docs` on Windows).
 
 ### Alternative Configuration (VS Code native MCP)
 
@@ -59,7 +59,7 @@ For VS Code's native MCP support, use this format:
       "type": "stdio",
       "command": "node",
       "args": [
-        "d:/github/RootAppDevDocs/build/index.js"
+        "d:/github/MCP-Server-for-RootApp-Dev-Docs/build/index.js"
       ]
     }
   }
@@ -142,7 +142,7 @@ Search within the actual content of all documentation files.
 ## Project Structure
 
 ```
-RootAppDevDocs/
+MCP-Server-for-RootApp-Dev-Docs/
 ├── DOCS/                    (documentation files)
 ├── src/
 │   └── index.ts             (MCP server implementation)

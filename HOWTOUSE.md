@@ -23,8 +23,8 @@ This guide provides in-depth instructions on setting up and using the RootApp Do
 ### Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/cyberofficial/RootAppDevDocs.git
-cd RootAppDevDocs
+git clone https://github.com/cyberofficial/MCP-Server-for-RootApp-Dev-Docs.git
+cd MCP-Server-for-RootApp-Dev-Docs
 ```
 
 ### Step 2: Install Dependencies
@@ -85,14 +85,14 @@ Open your MCP settings file and add the following entry to the `mcpServers` obje
 **Windows Example:**
 ```json
 {
-  "args": ["D:/projects/RootAppDevDocs/build/index.js"]
+  "args": ["D:/projects/MCP-Server-for-RootApp-Dev-Docs/build/index.js"]
 }
 ```
 
 **macOS/Linux Example:**
 ```json
 {
-  "args": ["/Users/yourname/projects/RootAppDevDocs/build/index.js"]
+  "args": ["/Users/yourname/projects/MCP-Server-for-RootApp-Dev-Docs/build/index.js"]
 }
 ```
 
@@ -105,7 +105,7 @@ Here's a complete example with other MCP servers:
   "mcpServers": {
     "rootapp-docs": {
       "command": "node",
-      "args": ["D:/projects/RootAppDevDocs/build/index.js"],
+      "args": ["D:/projects/MCP-Server-for-RootApp-Dev-Docs/build/index.js"],
       "type": "stdio",
       "disabled": false
     },
@@ -548,5 +548,5 @@ To add new tools, edit `src/index.ts`:
 
 For issues, questions, or contributions:
 
-- **GitHub Repository:** https://github.com/cyberofficial/RootAppDevDocs
+- **GitHub Repository:** https://github.com/cyberofficial/MCP-Server-for-RootApp-Dev-Docs
 - **Issues:** Report bugs or feature requests in GitHub Issues
