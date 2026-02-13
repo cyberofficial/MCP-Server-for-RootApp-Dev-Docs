@@ -140,7 +140,7 @@ class RootAppDocsServer {
             properties: {
               query: {
                 type: 'string',
-                description: 'Search query - keyword or phrase to search within file contents',
+                description: 'Search query - keyword or space-separated terms to search within file contents',
               },
               limit: {
                 type: 'number',
@@ -279,7 +279,9 @@ class RootAppDocsServer {
     const limit = (args.limit as number) || 20;
     const includeSnippet = (args.includeSnippet as boolean) || false;
     const contextLength = (args.contextLength as number) || 100;
-    const lowerQuery = query.toLowerCase();
+    
+    // Split query into multiple search terms by spaces
+    const searchTerms = query.toLowerCase().split(/\s+/).filter(term => term.length > 0);
 
     const matches: SearchMatch[] = [];
 
@@ -293,7 +295,7 @@ class RootAppDocsServer {
       const cleanContent = this.stripHtmlTags(content);
       const lowerContent = cleanContent.toLowerCase();
 
-      const matchCount = this.countOccurrences(lowerContent, lowerQuery);
+      const matchCount = this.countOccurrencesMultiple(lowerContent, searchTerms);
 
       if (matchCount > 0) {
         const match: SearchMatch = {
@@ -302,7 +304,7 @@ class RootAppDocsServer {
         };
 
         if (includeSnippet) {
-          match.snippet = this.extractSnippet(cleanContent, query, contextLength);
+          match.snippet = this.extractSnippetMultiple(cleanContent, searchTerms, contextLength);
         }
 
         matches.push(match);
@@ -319,6 +321,7 @@ class RootAppDocsServer {
             matches,
             total: matches.length,
             query,
+            searchTerms,
           }, null, 2),
         },
       ],
@@ -342,6 +345,19 @@ class RootAppDocsServer {
     return count;
   }
 
+  private countOccurrencesMultiple(content: string, searchTerms: string[]): number {
+    // Count total occurrences of all search terms
+    let totalCount = 0;
+    for (const term of searchTerms) {
+      let position = 0;
+      while ((position = content.indexOf(term, position)) !== -1) {
+        totalCount++;
+        position += term.length;
+      }
+    }
+    return totalCount;
+  }
+
   private extractSnippet(content: string, query: string, contextLength: number): string {
     const lowerContent = content.toLowerCase();
     const lowerQuery = query.toLowerCase();
@@ -351,6 +367,34 @@ class RootAppDocsServer {
 
     const start = Math.max(0, index - contextLength);
     const end = Math.min(content.length, index + query.length + contextLength);
+    
+    let snippet = content.substring(start, end);
+    
+    if (start > 0) snippet = '...' + snippet;
+    if (end < content.length) snippet = snippet + '...';
+    
+    return snippet;
+  }
+
+  private extractSnippetMultiple(content: string, searchTerms: string[], contextLength: number): string {
+    const lowerContent = content.toLowerCase();
+    
+    // Find the first occurrence of any search term
+    let firstIndex = -1;
+    let firstTerm = '';
+    
+    for (const term of searchTerms) {
+      const index = lowerContent.indexOf(term);
+      if (index !== -1 && (firstIndex === -1 || index < firstIndex)) {
+        firstIndex = index;
+        firstTerm = term;
+      }
+    }
+    
+    if (firstIndex === -1) return '';
+
+    const start = Math.max(0, firstIndex - contextLength);
+    const end = Math.min(content.length, firstIndex + firstTerm.length + contextLength);
     
     let snippet = content.substring(start, end);
     
