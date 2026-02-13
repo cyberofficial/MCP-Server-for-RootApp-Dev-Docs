@@ -198,9 +198,15 @@ class RootAppDocsServer {
     const fullPath = path.join(this.docsPath, filePath + '.md');
     
     if (!fs.existsSync(fullPath)) {
+      // Find similar paths to help the user/LLM
+      const suggestions = this.findSimilarPaths(filePath);
+      const suggestionMessage = suggestions.length > 0
+        ? ` Did you mean one of these?\n  - ${suggestions.join('\n  - ')}`
+        : '';
+      
       throw new McpError(
         ErrorCode.InvalidRequest,
-        `Documentation file not found: ${filePath}.md`
+        `Documentation file not found: ${filePath}.md${suggestionMessage}`
       );
     }
 
@@ -214,6 +220,61 @@ class RootAppDocsServer {
         },
       ],
     };
+  }
+
+  private findSimilarPaths(queryPath: string): string[] {
+    const lowerQuery = queryPath.toLowerCase();
+    const scores: { path: string; score: number }[] = [];
+
+    for (const file of this.indexedFiles) {
+      const filePath = file.fullPath.replace(/\.md$/, '');
+      const lowerFilePath = filePath.toLowerCase();
+      
+      // Calculate similarity score
+      let score = 0;
+      
+      // Exact match gets highest priority
+      if (lowerFilePath === lowerQuery) {
+        score = 100;
+      }
+      // Contains query
+      else if (lowerFilePath.includes(lowerQuery)) {
+        score = 80;
+      }
+      // Query contains the path
+      else if (lowerQuery.includes(lowerFilePath)) {
+        score = 70;
+      }
+      // Shared words
+      else {
+        const queryWords = lowerQuery.split(/[^a-z0-9]/).filter(w => w.length > 2);
+        const pathWords = lowerFilePath.split(/[^a-z0-9]/).filter(w => w.length > 2);
+        
+        const sharedWords = queryWords.filter(w => pathWords.includes(w));
+        score = sharedWords.length * 10;
+        
+        // Bonus for partial word matches
+        for (const qw of queryWords) {
+          for (const pw of pathWords) {
+            if (qw.includes(pw) || pw.includes(qw)) {
+              score += 5;
+            }
+          }
+        }
+      }
+
+      // Penalty for length difference
+      const lengthDiff = Math.abs(lowerFilePath.length - lowerQuery.length);
+      score -= Math.min(lengthDiff, 50);
+
+      if (score > 0) {
+        scores.push({ path: filePath, score });
+      }
+    }
+
+    // Sort by score and return top 5
+    scores.sort((a, b) => b.score - a.score);
+    return scores.slice(0, 5).map(s => s.path);
   }
 
   private handleListDirectory(args: any) {
