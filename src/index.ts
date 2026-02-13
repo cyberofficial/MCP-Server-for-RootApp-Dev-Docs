@@ -148,7 +148,7 @@ class RootAppDocsServer {
               },
               includeSnippet: {
                 type: 'boolean',
-                description: 'Include context snippets around matches (default: false)',
+                description: 'Include context snippets around matches (default: true)',
               },
               contextLength: {
                 type: 'number',
@@ -198,7 +198,7 @@ class RootAppDocsServer {
     const fullPath = path.join(this.docsPath, filePath + '.md');
     
     if (!fs.existsSync(fullPath)) {
-      // Find similar paths to help the user/LLM
+      // Find similar paths to help user/LLM
       const suggestions = this.findSimilarPaths(filePath);
       const suggestionMessage = suggestions.length > 0
         ? ` Did you mean one of these?\n  - ${suggestions.join('\n  - ')}`
@@ -338,7 +338,7 @@ class RootAppDocsServer {
     }
 
     const limit = (args.limit as number) || 20;
-    const includeSnippet = (args.includeSnippet as boolean) || false;
+    const includeSnippet = (args.includeSnippet as boolean) ?? true;
     const contextLength = (args.contextLength as number) || 100;
     
     // Split query into multiple search terms by spaces
@@ -352,9 +352,7 @@ class RootAppDocsServer {
       if (!fs.existsSync(fullPath)) continue;
 
       const content = fs.readFileSync(fullPath, 'utf-8');
-      // Strip HTML tags for cleaner search results
-      const cleanContent = this.stripHtmlTags(content);
-      const lowerContent = cleanContent.toLowerCase();
+      const lowerContent = content.toLowerCase();
 
       const matchCount = this.countOccurrencesMultiple(lowerContent, searchTerms);
 
@@ -365,7 +363,7 @@ class RootAppDocsServer {
         };
 
         if (includeSnippet) {
-          match.snippet = this.extractSnippetMultiple(cleanContent, searchTerms, contextLength);
+          match.snippet = this.extractSnippetMultiple(content, searchTerms, contextLength);
         }
 
         matches.push(match);
@@ -387,11 +385,6 @@ class RootAppDocsServer {
         },
       ],
     };
-  }
-
-  private stripHtmlTags(content: string): string {
-    // Remove content between < and > (HTML tags)
-    return content.replace(/<[^>]*>/g, '');
   }
 
   private countOccurrences(content: string, query: string): number {
@@ -440,7 +433,13 @@ class RootAppDocsServer {
   private extractSnippetMultiple(content: string, searchTerms: string[], contextLength: number): string {
     const lowerContent = content.toLowerCase();
     
-    // Find the first occurrence of any search term
+    // First, try to find matches in code blocks (prioritized)
+    const codeBlockMatch = this.extractFromCodeBlocks(lowerContent, content, searchTerms, contextLength);
+    if (codeBlockMatch) {
+      return codeBlockMatch;
+    }
+    
+    // If no code block match, fall back to regular content search
     let firstIndex = -1;
     let firstTerm = '';
     
@@ -463,6 +462,48 @@ class RootAppDocsServer {
     if (end < content.length) snippet = snippet + '...';
     
     return snippet;
+  }
+
+  private extractFromCodeBlocks(
+    lowerContent: string,
+    originalContent: string,
+    searchTerms: string[],
+    contextLength: number
+  ): string | null {
+    // Match code blocks: ```language ... ``` or <pre> ... </pre>
+    const codeBlockRegex = /(?:```[\s\S]*?```|<pre>[\s\S]*?<\/pre>)/g;
+    let match;
+    let bestMatch: { index: number; term: string; start: number; end: number } | null = null;
+
+    while ((match = codeBlockRegex.exec(lowerContent)) !== null) {
+      const blockStart = match.index;
+      const blockEnd = codeBlockRegex.lastIndex;
+      const block = match[0];
+
+      // Search within this code block
+      for (const term of searchTerms) {
+        const index = block.indexOf(term);
+        if (index !== -1) {
+          const absoluteIndex = blockStart + index;
+          // Use the earliest found match
+          if (!bestMatch || absoluteIndex < bestMatch.index) {
+            bestMatch = {
+              index: absoluteIndex,
+              term,
+              start: Math.max(blockStart, absoluteIndex - contextLength),
+              end: Math.min(blockEnd, absoluteIndex + term.length + contextLength),
+            };
+          }
+        }
+      }
+    }
+
+    if (bestMatch) {
+      const snippet = originalContent.substring(bestMatch.start, bestMatch.end);
+      return 'Code:\n' + snippet;
+    }
+
+    return null;
   }
 
   private setupErrorHandling(): void {
