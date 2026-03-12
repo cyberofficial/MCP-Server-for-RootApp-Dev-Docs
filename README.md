@@ -1,5 +1,7 @@
 # RootApp Documentation MCP Server
 
+[![MCPAmpel](https://img.shields.io/endpoint?url=https://mcpampel.com/badge/cyberofficial/mcp-server-for-rootapp-dev-docs.json)](https://mcpampel.com/repo/cyberofficial/mcp-server-for-rootapp-dev-docs)
+
 A simple MCP (Model Context Protocol) server that serves RootApp documentation files with search and retrieval capabilities using stdio transport.
 
 ## Docs as of Feb 11 2026
